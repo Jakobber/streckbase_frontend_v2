@@ -25,8 +25,8 @@ export class UsersComponent implements OnInit, OnDestroy {
 
     this.usersService.getUsers()
       .subscribe((users: User[]) => {
-        this.lobare = users.filter((user: User) => user.lobare);
-        this.xlobare = users.filter((user: User) => !user.lobare).reverse();
+        this.lobare = users.filter((user: User) => user.lobare === 1);
+        this.xlobare = users.filter((user: User) => user.lobare !== 1).reverse();
       });
   }
 

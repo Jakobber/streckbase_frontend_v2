@@ -23,7 +23,15 @@ export class ProductsService {
     }
   }
 
+  getArchivedItems(): Observable<Item[]> {
+    return this.http.get<Item[]>(`${environment.apiUrl}/items/archived?limit=1000`);
+  }
+
   deleteItem(item: Item): Observable<Item> {
     return this.http.delete<Item>(`${environment.apiUrl}/items/${item.id}`);
+  }
+
+  restoreItem(item: Item): Observable<any> {
+    return this.http.put(`${environment.apiUrl}/items/${item.id}/restore`, {});
   }
 }

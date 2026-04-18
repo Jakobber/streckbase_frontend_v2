@@ -15,8 +15,8 @@ export class UserService {
     return this.http.get<User>(`${environment.apiUrl}/users/${userId}/purchases?limit=20`);
   }
 
-  purchaseItem(userId: string, item: Item): Observable<User> {
-    return this.http.post<User>(`${environment.apiUrl}/users/${userId}/purchases`, item);
+  purchaseItem(userId: string, item: Item, najs: boolean = false): Observable<User> {
+    return this.http.post<User>(`${environment.apiUrl}/users/${userId}/purchases`, { ...item, najs });
   }
 
   deletePurchase(userId: string, purchaseId: number): Observable<any> {

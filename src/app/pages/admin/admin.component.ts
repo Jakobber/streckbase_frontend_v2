@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { faTh, faListUl, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faTh, faListUl, faUsers, faCog } from "@fortawesome/free-solid-svg-icons";
 
 import { Link } from "./../../components/menu/link";
 
@@ -20,11 +20,11 @@ export class AdminComponent {
       label: "Produkter",
       route: "/admin/products"
     },
-    // {
-    //   icon: faListUl,
-    //   label: "Historik",
-    //   route: "/admin/history"
-    // }
+    {
+      icon: faCog,
+      label: "Inställningar",
+      route: "/admin/settings"
+    }
   ];
 
   constructor() { }

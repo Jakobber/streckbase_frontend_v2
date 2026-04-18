@@ -1,3 +1,25 @@
+<div class="inner" *ngIf="archived && archived.length > 0">
+  <div class="label archived-label" (click)="showArchived = !showArchived" style="cursor:pointer">
+    Arkiverade produkter ({{ archived.length }}) {{ showArchived ? '▲' : '▼' }}
+  </div>
+  <table *ngIf="showArchived">
+    <thead>
+      <tr>
+        <th>Namn</th>
+        <th>Pris</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of archived">
+        <td>{{ item.name }}</td>
+        <td>{{ item.price }}kr</td>
+        <td><button type="button" (click)="restore(item)">Återaktivera</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <div class="inner">
   <div class="label">
     Produkter
@@ -42,15 +64,40 @@
           </label>
         </div>
       </div>
+    </div>
 
+    <div class="row">
       <div class="col">
         <div class="form-group">
           <label for="price">
             <input type="text" class="form-control" id="price" formControlName="price" autocomplete="off" required>
-            <span>Pris (kr)</span>
+            <span>Pris LoBare (kr)</span>
           </label>
         </div>
-
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <label for="price_xlob">
+            <input type="number" class="form-control" id="price_xlob" formControlName="price_xlob" autocomplete="off">
+            <span>Pris X-LoB (kr)</span>
+          </label>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <label for="price_andra">
+            <input type="number" class="form-control" id="price_andra" formControlName="price_andra" autocomplete="off">
+            <span>Pris Andra (kr)</span>
+          </label>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <label for="price_najs">
+            <input type="number" class="form-control" id="price_najs" formControlName="price_najs" autocomplete="off">
+            <span>Pris Najs (kr)</span>
+          </label>
+        </div>
       </div>
     </div>
 
@@ -63,7 +110,6 @@
           </label>
         </div>
       </div>
-
       <div class="col">
         <div class="form-group">
           <label for="volume">
@@ -72,14 +118,18 @@
           </label>
         </div>
       </div>
+      <div class="col">
+        <div class="form-group">
+          <app-checkbox label="Exkludera från highscore" formControlName="exclude_from_highscore"></app-checkbox>
+        </div>
+      </div>
     </div>
 
     <div class="row">
       <div class="col">
         <div class="form-group">
           <label for="barcodes">
-            <input type="text" class="form-control" id="barcodes" formControlName="barcodes" autocomplete="off"
-              required>
+            <input type="text" class="form-control" id="barcodes" formControlName="barcodes" autocomplete="off" required>
             <span>Streckkoder (kommaseparerade EAN-7)</span>
           </label>
         </div>
@@ -98,7 +148,7 @@
     </div>
 
     <div class="bottom-bar">
-      <app-button *ngIf="!isNewItem" class="remove" modifiers="normal danger" (click)="delete($event)">Ta bort produkt</app-button>
+      <app-button *ngIf="!isNewItem" class="remove" modifiers="normal danger" type="button" (click)="delete($event)">Ta bort produkt</app-button>
       <app-button modifiers="normal" type="submit" [disabled]="itemForm.invalid">Spara</app-button>
     </div>
   </form>

@@ -12,8 +12,10 @@ import { User } from "./../../../types/user";
 })
 export class UsersComponent implements OnInit {
   private currentUser: User;
-  public lobare: User[];
-  public xlobare: User[];
+  public lobare: User[] = [];
+  public andra: User[] = [];
+  public archivedUsers: User[] = [];
+  public showArchivedUsers: boolean = false;
   public faUser: IconDefinition = faUser;
   public isNewUser: boolean = true;
   public showUserModal: boolean = false;
@@ -24,7 +26,7 @@ export class UsersComponent implements OnInit {
     lastname: new FormControl(""),
     id: new FormControl("", Validators.pattern(/\d{10}/)),
     email: new FormControl("", Validators.email),
-    lobare: new FormControl(true),
+    lobare: new FormControl(1),
     admin: new FormControl(false),
     debt: new FormControl({ value: 0, disabled: true }, Validators.pattern(/\d+/))
   });
@@ -33,29 +35,73 @@ export class UsersComponent implements OnInit {
 
   ngOnInit() {
     this.getUsers();
+    this.getArchivedUsers();
   }
 
   private getUsers() {
     this.usersService.getUsers()
       .subscribe((users: User[]) => {
-        this.lobare = users.filter((user: User) => user.lobare);
-        this.xlobare = users.filter((user: User) => !user.lobare).reverse();
+        this.lobare = users.filter((u: User) => u.lobare === 1).reverse();
+        this.andra = users.filter((u: User) => u.lobare !== 1).reverse();
+      });
+  }
+
+  private getArchivedUsers() {
+    this.usersService.getArchivedUsers()
+      .subscribe((users: User[]) => this.archivedUsers = users);
+  }
+
+  disable() {
+    if (!this.currentUser || this.loading) return;
+    this.loading = true;
+    this.usersService.disableUser(this.currentUser.id)
+      .subscribe(() => {
+        this.getUsers();
+        this.getArchivedUsers();
+        this.showUserModal = false;
+        this.loading = false;
+      }, () => { this.loading = false; });
+  }
+
+  restoreUser(user: User) {
+    this.usersService.restoreUser(user.id)
+      .subscribe(() => {
+        this.getUsers();
+        this.getArchivedUsers();
+      });
+  }
+
+  repay() {
+    if (!this.currentUser || this.loading) return;
+    const input = window.prompt("Ange återbetalningsbelopp (kr):");
+    const amount = parseInt(input, 10);
+    if (!amount || amount <= 0) return;
+    this.loading = true;
+
+    this.usersService.createRepayment(this.currentUser.id, amount)
+      .subscribe(() => {
+        this.getUsers();
+        this.showUserModal = false;
+        this.loading = false;
+      }, () => {
+        this.loading = false;
       });
   }
 
   toggleUserModal() {
     if (this.showUserModal) {
-      this.userForm.reset();
-      this.currentUser = null;
+      this.showUserModal = false;
+      this.isNewUser = false;
     } else {
+      this.userForm.reset({ lobare: 1 });
+      this.currentUser = null;
       this.userForm.get("debt").disable();
       this.userForm.get("firstname").enable();
       this.userForm.get("lastname").enable();
       this.userForm.get("id").enable();
+      this.showUserModal = true;
+      this.isNewUser = true;
     }
-
-    this.showUserModal = !this.showUserModal;
-    this.isNewUser = this.showUserModal;
   }
 
   edit(user: User) {
@@ -85,12 +131,13 @@ export class UsersComponent implements OnInit {
         ...this.currentUser,
         ...this.userForm.value,
         debt: this.userForm.value.debt ? parseInt(this.userForm.value.debt, 10) : null,
-        lobare: !!this.userForm.value.lobare
+        lobare: parseInt(this.userForm.value.lobare, 10)
       };
 
       this.usersService.updateUser(user, this.isNewUser)
         .subscribe(() => {
           this.getUsers();
+          this.getArchivedUsers();
           this.userForm.reset();
           this.showUserModal = false;
           this.loading = false;

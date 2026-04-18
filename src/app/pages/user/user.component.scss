@@ -144,3 +144,17 @@ $gutter: 2rem;
   margin-top: 1rem;
   margin-bottom: .25rem;
 }
+
+.right-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+:host ::ng-deep .najs-active {
+  background-color: #2ecc71 !important;
+  box-shadow: 0px 4px 20px 0px rgba(46, 204, 113, 0.5);
+  font-size: .75rem;
+  font-weight: bold;
+  white-space: normal;
+  line-height: 1.2;
+}

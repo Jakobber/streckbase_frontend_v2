@@ -4,7 +4,7 @@ import { ActivatedRoute, Params, Router } from "@angular/router";
 import { Subscription } from "rxjs/internal/Subscription";
 import { switchMap } from "rxjs/internal/operators/switchMap";
 import { throwError } from "rxjs/internal/observable/throwError";
-import { faChevronLeft, faUndo, faQuestion, IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faUndo, faQuestion, faTimes, faCheck, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 
 import { appConfig } from "./../../app.config";
 import { ItemService } from "./../item/item.service";
@@ -33,9 +33,12 @@ export class UserComponent implements OnInit {
   public showHelpModal: boolean = false;
   public dateValid: boolean = false;
   public purchaseItem: Purchase;
+  public najsMode: boolean = false;
   public faChevronLeft = faChevronLeft;
   public faUndo: IconDefinition = faUndo;
   public faQuestion: IconDefinition = faQuestion;
+  public faTimes: IconDefinition = faTimes;
+  public faCheck: IconDefinition = faCheck;
 
   constructor(
     private route: ActivatedRoute,
@@ -81,19 +84,27 @@ export class UserComponent implements OnInit {
     }, appConfig.defaultTime);
   }
 
+  toggleNajs() {
+    this.clearTimer();
+    this.setTimer();
+    this.najsMode = !this.najsMode;
+  }
+
   buy(barcode: string) {
     this.clearTimer();
     this.setTimer();
     this.purchaseItem = null;
     this.dateValid = false;
     this.showUndoConfirmation = false;
+    const isNajs = this.najsMode;
+    this.najsMode = false;
 
     this.itemService.getBarcodeItem(barcode)
       .pipe(
         switchMap((item: Item) => {
           if (!item) return throwError("No matching item");
 
-          return this.userService.purchaseItem(this.user.id, item);
+          return this.userService.purchaseItem(this.user.id, item, isNajs);
         }),
         switchMap(() => this.userService.getUser(this.user.id))
       )

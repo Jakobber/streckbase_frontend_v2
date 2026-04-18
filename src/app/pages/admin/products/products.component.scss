@@ -63,6 +63,11 @@ tbody tr {
   margin-top: size("gutter");
 }
 
+app-checkbox {
+  display: block;
+  padding-top: 2.2rem;
+}
+
 .bottom-bar {
   display: flex;
   justify-content: flex-end;

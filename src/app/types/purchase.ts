@@ -5,4 +5,5 @@ export class Purchase {
   date: Date = null;
   item: Item = null;
   totalCount?: number;
+  najs?: boolean = false;
 }

@@ -1,26 +1,36 @@
-<div *ngIf="lobare && xlobare" class="inner">
+<div *ngIf="lobare && andra" class="inner">
   <div class="label">
     Användare
   </div>
 
-  <div class="title">
-    Lob
-  </div>
-  <ul class="list lobare">
-    <li *ngFor="let lobster of lobare" class="item">
-      <div class="user" (click)="edit(lobster)">
-        <app-user-card [user]="lobster" [showHeat]="true"></app-user-card>
+  <div class="title">LoBare</div>
+  <ul class="list">
+    <li *ngFor="let user of lobare" class="item">
+      <div class="user" (click)="edit(user)">
+        <app-user-card [user]="user" [showHeat]="true"></app-user-card>
       </div>
     </li>
   </ul>
 
-  <div class="title">
-    Övriga
-  </div>
+  <div class="title">Andra</div>
   <ul class="list">
-    <li *ngFor="let xlobster of xlobare" class="item">
-      <div class="user" (click)="edit(xlobster)">
-        <app-user-card [user]="xlobster" [showHeat]="true"></app-user-card>
+    <li *ngFor="let user of andra" class="item">
+      <div class="user" (click)="edit(user)">
+        <app-user-card [user]="user" [showHeat]="true"></app-user-card>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<div *ngIf="archivedUsers && archivedUsers.length > 0" class="inner">
+  <div class="label" (click)="showArchivedUsers = !showArchivedUsers" style="cursor:pointer">
+    Inaktiva användare ({{ archivedUsers.length }}) {{ showArchivedUsers ? '▲' : '▼' }}
+  </div>
+  <ul *ngIf="showArchivedUsers" class="list">
+    <li *ngFor="let user of archivedUsers" class="item">
+      <div class="user">
+        <app-user-card [user]="user"></app-user-card>
+        <button type="button" (click)="restoreUser(user)">Återaktivera</button>
       </div>
     </li>
   </ul>
@@ -54,7 +64,14 @@
         </div>
 
         <div class="form-group">
-          <app-checkbox label="Lobare" formControlName="lobare"></app-checkbox>
+          <label for="lobare">
+            <select class="form-control" id="lobare" formControlName="lobare">
+              <option [value]="1">LoBare</option>
+              <option [value]="2">X-LoB</option>
+              <option [value]="0">Andra</option>
+            </select>
+            <span>Klass</span>
+          </label>
         </div>
 
         <div class="form-group">
@@ -88,6 +105,8 @@
     </div>
 
     <div class="bottom-bar">
+      <app-button *ngIf="!isNewUser" modifiers="normal danger" type="button" (click)="disable()">Inaktivera</app-button>
+      <app-button *ngIf="!isNewUser" modifiers="normal" type="button" (click)="repay()">Återbetalning</app-button>
       <app-button modifiers="normal" type="submit" [disabled]="userForm.invalid">Spara</app-button>
     </div>
   </form>

@@ -43,4 +43,20 @@ export class UsersService implements CanActivate {
       return this.http.put<User>(`${environment.apiUrl}/users/${user.id}`, user);
     }
   }
+
+  createRepayment(userId: string, amount: number): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/users/${userId}/repayment`, { amount });
+  }
+
+  getArchivedUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${environment.apiUrl}/users/archived`);
+  }
+
+  disableUser(userId: string): Observable<any> {
+    return this.http.delete(`${environment.apiUrl}/users/${userId}/disable`);
+  }
+
+  restoreUser(userId: string): Observable<any> {
+    return this.http.put(`${environment.apiUrl}/users/${userId}/restore`, {});
+  }
 }

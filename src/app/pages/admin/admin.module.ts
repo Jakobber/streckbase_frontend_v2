@@ -6,10 +6,12 @@ import { HistoryComponent } from "./history/history.component";
 import { LoginComponent } from "./login/login.component";
 import { ProductsComponent } from "./products/products.component";
 import { UsersComponent } from "./users/users.component";
+import { SettingsComponent } from "./settings/settings.component";
 import { ComponentsModule } from "./../../components";
 import { SharedModule } from "./../../shared";
 import { ProductsService } from "./products/products.service";
 import { UsersService } from "./users/users.service";
+import { SettingsService } from "./settings/settings.service";
 
 const routes: Routes = [
   {
@@ -20,7 +22,8 @@ const routes: Routes = [
       { path: "", redirectTo: "users", pathMatch: "full" },
       { path: "users", component: UsersComponent },
       { path: "products", component: ProductsComponent },
-      { path: "history", component: HistoryComponent }
+      { path: "history", component: HistoryComponent },
+      { path: "settings", component: SettingsComponent }
     ]
   },
   { path: "login", component: LoginComponent }
@@ -37,11 +40,13 @@ const routes: Routes = [
     HistoryComponent,
     LoginComponent,
     ProductsComponent,
-    UsersComponent
+    UsersComponent,
+    SettingsComponent
   ],
   providers: [
     ProductsService,
-    UsersService
+    UsersService,
+    SettingsService
   ]
 })
 export class AdminModule { }

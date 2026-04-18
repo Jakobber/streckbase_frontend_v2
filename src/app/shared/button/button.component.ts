@@ -11,6 +11,7 @@ export class ButtonComponent {
   @Input() modifiers: string[] = [];
   @Input() to?: string;
   @Input() disabled: boolean = false;
+  @Input() type: string = "submit";
 
   constructor(private router: Router) { }
 
