@@ -41,7 +41,7 @@ export class UsersComponent implements OnInit {
   private getUsers() {
     this.usersService.getUsers()
       .subscribe((users: User[]) => {
-        this.lobare = users.filter((u: User) => u.lobare === 1).reverse();
+        this.lobare = users.filter((u: User) => u.lobare === 1);
         this.andra = users.filter((u: User) => u.lobare !== 1).reverse();
       });
   }
